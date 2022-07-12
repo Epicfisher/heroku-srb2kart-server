@@ -6,41 +6,29 @@ indent() {
   sed -u 's/^/       /'
 }
 
-if [ -z "$NGROK_API_TOKEN" ]; then
-  echo "You must set the NGROK_API_TOKEN config var to create a TCP tunnel!"
+if [ -z "$LOCALTONET_API_TOKEN" ]; then
+  echo "You must set the LOCALTONET_API_TOKEN config var to create a UDP tunnel!"
   exit 1
 fi
 
+# Download LocalToNet
 echo -n "-----> Installing localtonet... "
 curl --silent -o localtonet.zip -L "https://localtonet.com/download/localtonet-linux-x64.zip" | indent
 unzip localtonet.zip -d ./ > /dev/null 2>&1
 chmod +x ./localtonet
 echo "done"
 
-# Start the TCP tunnel
+# Start the UDP tunnel
 echo -n "-----> Starting localtonet... "
-localtonet_cmd = "./localtonet authtoken $LOCALTONET_API_TOKEN"
-#./localtonet udp 5029 &
+localtonet_cmd="./localtonet authtoken $LOCALTONET_API_TOKEN"
 eval "$localtonet_cmd | tee localtonet.log &"
 echo "done"
 
-#echo -n "-----> Installing ngrok... "
-#curl --silent -o ngrok.zip -L "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip" | indent
-#unzip ngrok.zip -d bin > /dev/null 2>&1
-#echo "done"
-
-# Start the TCP tunnel
-#ngrok_cmd="bin/ngrok tcp -authtoken $NGROK_API_TOKEN -log stdout --log-level debug ${NGROK_OPTS} ${port}"
-#echo -n "-----> Starting ngrok... "
-#eval "$ngrok_cmd | tee ngrok.log &"
-#ngrok_pid=$!
-#echo "done"
-
 mkdir /app/.srb2kart/
-#cp ./adedserver.cfg /app/.dpkg/usr/games/SRB2Kart/adedserver.cfg
 find /app/ -type f -execdir cp "{}" /app/.srb2kart/ ";"
 
 cp /app/.apt/usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-13.99.so /app/.apt/usr/lib/x86_64-linux-gnu/libpulsecommon-13.99.so
 rm -rf /app/.apt/usr/lib/x86_64-linux-gnu/pulseaudio/
+
 echo "Starting SRB2Kart"
-/app/.dpkg/usr/games/SRB2Kart/srb2kart -dedicated
+/app/.dpkg/usr/games/SRB2Kart/srb2kart -dedicated -port ${port}
