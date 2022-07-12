@@ -14,7 +14,7 @@ fi
 echo -n "-----> Installing localtonet... "
 curl --silent -o localtonet.zip -L "https://localtonet.com/download/localtonet-linux-x64.zip" | indent
 unzip localtonet.zip -d ./ > /dev/null 2>&1
-chmod 777 ./localtonet
+chmod +x ./localtonet
 echo "done"
 
 # Start the TCP tunnel
