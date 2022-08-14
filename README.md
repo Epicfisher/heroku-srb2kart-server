@@ -1,5 +1,5 @@
 # Heroku SRB2Kart Server
-Runs a Free SRB2Kart Server within Heroku.
+Runs a Free [SRB2Kart](https://github.com/STJr/Kart-Public) Server within Heroku.
 
 ## Features
 
